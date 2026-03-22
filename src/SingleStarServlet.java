@@ -37,6 +37,10 @@ public class SingleStarservlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try (Connection conn = dataSource.getConnection()) {
+            String query = "SELECT * FROM stars AS s, stars_in_movies AS sim, movies AS M" +
+                           "WHERE M.id = SIM.movie_id AND SIM.startId = S.id AND s.id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(query);
 
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
