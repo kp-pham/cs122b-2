@@ -42,6 +42,8 @@ public class SingleStarservlet extends HttpServlet {
 
             PreparedStatement statement = conn.prepareStatement(query);
 
+            statement.setString(1, id);
+
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
