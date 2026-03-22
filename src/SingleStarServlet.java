@@ -49,7 +49,25 @@ public class SingleStarservlet extends HttpServlet {
             JsonArray jsonArray = new JsonArray();
 
             while (rs.next()) {
+                String starId = rs.getString("starId");
+                String starName = rs.getString("name");
+                String starDob = rs.getString("birthYear");
 
+                String movieId = rs.getString("movieId");
+                String movieTitle = rs.getString("title");
+                String movieYear = rs.getString("year");
+                String movieDirector = rs.getString("director");
+
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("star_id", starId);
+                jsonObject.addProperty("star_name", starName);
+                jsonObject.addProperty("star_dob", starDob);
+                jsonObject.addProperty("movie_id", movieId);
+                jsonObject.addProperty("movie_title", movieTitle);
+                jsonObject.addProperty("movie_year", movieYear);
+                jsonObject.addProperty("movie_director", movieDirector);
+
+                jsonArray.add(jsonObject);
             }
 
         } catch (Exception e) {
