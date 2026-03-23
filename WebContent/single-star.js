@@ -21,6 +21,20 @@ function handleResult(resultData) {
 
     starInfo.append("<p>Star Name: " + resultData["name"] + "</p>" +
                     "<p>Data of Birth: " + resultData["birthYear"] + "</p>");
+
+    let movieTable = jQuery("#movie_table_body");
+
+    resultData["movies"].forEach(movie => {
+        let row = `
+            <tr>
+                <td>${movie["title"]}</td>
+                <td>${movie["birthYear"]}</td>
+                <td>${movie["director"]}</td>
+            </tr>
+        `;
+
+        movieTable.append(row);
+    });
 }
 
 let starId = getParameterByName('id');
