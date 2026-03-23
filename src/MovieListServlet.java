@@ -40,6 +40,17 @@ public class MovieListServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try (Connection conn = dataSource.getConnection()) {
+            String query = "SELECT M.id, M.title, M.year, M.director, R.rating " +
+                           "COALESCE(JSON_ARRAYAGG(G.name), JSON_ARRAY()) AS genres, " +
+                           "COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', S.id, 'name', S.name)), JSON_ARRAY()) AS stars " +
+                           "FROM movies AS M " +
+                           "LEFT JOIN genres_in_movies AS GIM ON M.id = GIM.movieId " +
+                           "LEFT JOIN genres AS G ON GIM.genreId = G.id " +
+                           "LEFT JOIN stars_in_movies AS SIM ON M.id = SIM.movieId " +
+                           "LEFT JOIN stars AS S ON SIM.starId = S.id " +
+                           "LEFT JOIN ratings AS R ON M.id = R.movieId " +
+                           "ORDER BY R.rating DESC " +
+                           "LIMIT 20";
 
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
@@ -48,6 +59,7 @@ public class MovieListServlet extends HttpServlet {
 
             request.getServletContext().log("Error:", e);
             response.setStatus(500);
+
         } finally {
             out.close();
         }
