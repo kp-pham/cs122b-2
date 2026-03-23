@@ -52,6 +52,30 @@ public class MovieListServlet extends HttpServlet {
                            "ORDER BY R.rating DESC " +
                            "LIMIT 20";
 
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            ResultSet rs = statement.executeQuery();
+
+            JsonArray jsonArray = new JsonArray();
+
+            while (rs.next()) {
+                JsonObject jsonObject = new JsonObject();
+
+                jsonObject.addProperty("id", rs.getString("M.id"));
+                jsonObject.addProperty("title", rs.getString("M.title"));
+                jsonObject.addProperty("year", rs.getString("M.year"));
+                jsonObject.addProperty("director", rs.getString("M.director"));
+                jsonObject.addProperty("rating", rs.getString("R.rating"));
+
+                JsonArray genresArray = JsonParser.parseString(rs.getString("genres"));
+                jsonObject.add("genres", genresArray);
+
+                JsonArray starsArray = JsonParser.parseString(rs.getString("stars"));
+                jsonObject.add("stars", starsArray);
+
+                jsonArray.add(jsonObject);
+            }
+
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
