@@ -16,6 +16,13 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2]);
 }
 
+function handleResult(resultData) {
+    let starInfo = jQuery("#star_info");
+
+    starInfo.append("<p>Star Name: " + resultData["name"] + "</p>" +
+                    "<p>Data of Birth: " + resultData["birthYear"] + "</p>");
+}
+
 let starId = getParameterByName('id');
 
 jQuery.ajax({
