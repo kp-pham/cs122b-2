@@ -39,7 +39,7 @@ public class SingleMovieServlet extends HttpServlet {
         try (Connection conn = dataSource.getConnection()) {
 
             // Minimize number of reads to avoid the N + 1 problem
-            String query = "SELECT M.id, M.title, M.year, M.director, S.id AS starId, S.name," +
+            String query = "SELECT M.id, M.title, M.year, M.director, S.id AS starId, S.name, R.rating" +
                            "JSON_ARRAYAGG(DISTINCT G.name) AS genres, JSON_ARRAYAGG(JSON_OBJECT('id', S.id AS starId, 'name', S.name)" +
                            "FROM movies AS M" +
                            "INNER JOIN genres_in_movies AS GIM ON M.id = GIM.movieId" +
@@ -62,6 +62,7 @@ public class SingleMovieServlet extends HttpServlet {
                 jsonObject.addProperty("title", rs.getString("M.title"));
                 jsonObject.addProperty("year", rs.getString("M.year"));
                 jsonObject.addProperty("director", rs.getString("M.director"));
+                jsonObject.addProperty("rating", rs.getString("R.rating"));
 
                 JsonArray genresArray = JsonParser.parseString(rs.getString("genres")).getAsJsonArray();
                 jsonObject.add("genres", genresArray);
@@ -69,6 +70,7 @@ public class SingleMovieServlet extends HttpServlet {
                 JsonArray starsArray = JsonParser.parseString(rs.getString("stars")).getAsJsonArray();
                 jsonObject.add("stars", starsArray);
             }
+
             rs.close();
             statement.close();
 
