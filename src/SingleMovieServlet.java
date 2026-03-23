@@ -27,5 +27,41 @@ public class SingleMovieServlet extends HttpServlet {
         }
     }
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
 
+        String id = request.getParameter("id");
+
+        request.getServletContext().log("getting movie id: " + id);
+
+        PrintWriter out = response.getWriter();
+
+        try (Connection conn = dataSource.getConnection()) {
+            String query = "SELECT * FROM movies AS M, stars_in_movies AS SIM, stars AS S, ratings AS R" +
+                           "WHERE M.id = SIM.movie_id AND SIM.starId = S.id AND M.id = R.movie_id AND M.id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            statement.setString(1, id);
+
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+
+            }
+
+            rs.close();
+            statement.close();
+
+        } catch (Exception e) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
+
+            request.getServletContext().log("Error:", e);
+            request.setStatus(500);
+        } finally {
+            out.close();
+        }
+    }
 }
