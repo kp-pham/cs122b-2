@@ -19,5 +19,13 @@ import java.sql.ResultSet;
 public class SingleMovieServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
+    public void init(ServletConfig config) {
+        try {
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
