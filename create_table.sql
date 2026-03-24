@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS moviedb;
+CREATE DATABASE moviedb;
+USE moviedb;
+
 CREATE TABLE movies(
     id VARCHAR(10) NOT NULL,
     title VARCHAR(100) NOT NULL,
