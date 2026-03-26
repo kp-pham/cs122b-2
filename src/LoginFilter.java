@@ -39,5 +39,8 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.html");
         allowedURIs.add("login.js");
         allowedURIs.add("api/login");
+
+        allowedURIs.add(".css");
+        allowedURIs.add(".ico");
     }
 }
