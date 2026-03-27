@@ -30,4 +30,30 @@ public class SearchServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+
+        String title = request.getParameter("title");
+        String year = request.getParameter("year");
+        String director = request.getParameter("director");
+        String star = request.getParameter("star");
+
+        PrintWriter out = response.getWriter();
+
+        try (Connection conn = dataSource.getConnection()) {
+
+
+        } catch (Exception e) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
+
+            request.getServletContext().log("Error:", e);
+            response.setStatus(500);
+
+        } finally {
+            out.close();
+        }
+    }
 }
