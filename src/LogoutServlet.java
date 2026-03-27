@@ -9,6 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,5 +32,15 @@ public class LogoutServlet extends HttpServlet {
         } catch (NamingException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            session.invalidate();
+        }
+
+        response.sendRedirect("login.html");
     }
 }
