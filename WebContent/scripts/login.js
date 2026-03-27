@@ -1,10 +1,12 @@
 let login_form = $("#login_form");
+let error_message = $("#login_error_message")
 
 function handleLoginResult(resultData) {
     if (resultData["status"] === "success") {
         window.location.replace("index.html");
     } else {
-        $("#login_error_message").text(resultData["message"]);
+        error_message.removeClass("d-none");
+        error_message.text(resultData["message"]);
     }
 }
 
