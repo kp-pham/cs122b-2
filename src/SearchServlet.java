@@ -52,9 +52,7 @@ public class SearchServlet extends HttpServlet {
                            "LEFT JOIN genres AS G ON GIM.genreId = G.id " +
                            "LEFT JOIN stars_in_movies AS SIM ON M.id = SIM.movieId " +
                            "LEFT JOIN stars AS S ON SIM.starId = S.id " +
-                           "WHERE 1 = 1 " +
-                           "GROUP BY M.id, M.title, M.year, M.director, M.rating " +
-                           "ORDER BY M.rating DESC";
+                           "WHERE 1 = 1 ";
 
             if (title != null && !title.trim().isEmpty()) {
                 query += "AND M.title ILIKE ? ";
@@ -69,8 +67,11 @@ public class SearchServlet extends HttpServlet {
             }
 
             if (star != null && !star.trim().isEmpty()) {
-                query += "AND M.director ILIKE ? ";
+                query += "AND S.name ILIKE ? ";
             }
+
+            query += "GROUP BY M.id, M.title, M.year, M.director, M.rating " +
+                     "ORDER BY M.rating DESC";
 
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
