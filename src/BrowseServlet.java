@@ -52,15 +52,55 @@ public class BrowseServlet extends HttpServlet {
                     "LEFT JOIN stars_in_movies AS SIM ON M.id = SIM.movieId " +
                     "LEFT JOIN stars AS S ON SIM.starId = S.id ";
 
+            String parameter = null;
+
             if (genre != null) {
                 query += "WHERE M.genre = ? ";
+                parameter = genre;
+
             } else if (!prefix.equals("*")) {
-                query += "WHERE M.title REGEXP '^[^a-z0-9]' ";
-            } else {
                 query += "WHERE M.title ILIKE ? ";
+                parameter = prefix + "%";
+
+            } else {
+                query += "WHERE M.title REGEXP '^[^a-z0-9]' ";
             }
 
             query += "GROUP BY M.id, M.title, M.year, M.director, M.rating";
+
+            PreparedStatement statement = conn.prepareStatement(query);
+
+            if (parameter != null) {
+                statement.setString(1, parameter);
+            }
+
+            ResultSet rs = statement.executeQuery();
+
+            JsonArray jsonArray = new JsonArray();
+
+            while (rs.next()) {
+                JsonObject jsonObject = new JsonObject();
+
+                jsonObject.addProperty("id", rs.getString("M.id"));
+                jsonObject.addProperty("title", rs.getString("M.title"));
+                jsonObject.addProperty("year", rs.getString("M.year"));
+                jsonObject.addProperty("director", rs.getString("M.director"));
+                jsonObject.addProperty("rating", rs.getString("M.rating"));
+
+                JsonArray genresArray = JsonParser.parseString(rs.getString("genres")).getAsJsonArray();
+                jsonObject.add("genres", genresArray);
+
+                JsonArray starsArray = JsonParser.parseString(rs.getString("stars")).getAsJsonArray();
+                jsonObject.add("stars", starsArray);
+
+                jsonArray.add(jsonObject);
+            }
+
+            rs.close();
+            statement.close();
+
+            out.write(jsonArray.toString());
+            response.setStatus(200);
 
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
