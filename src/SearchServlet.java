@@ -99,6 +99,11 @@ public class SearchServlet extends HttpServlet {
             query += "GROUP BY M.id, M.title, M.year, M.director, M.rating " +
                      "ORDER BY M.rating DESC";
 
+            PreparedStatement statement = conn.prepareStatement(query);
+            for (int i = 0; i < params.size(); ++i) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
