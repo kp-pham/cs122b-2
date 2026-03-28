@@ -2,8 +2,13 @@ function handleResult(resultData) {
     let genresList = $("#genres-list");
 
     resultData.forEach((genre, index) => {
+
         let link = `<a href="list.html?genre=${encodeURIComponent(genre)}">${genre}</a>`;
         genresList.append(link);
+
+        if (index < resultData.length - 1) {
+            genresList.append(" | ");
+        }
     });
 }
 
