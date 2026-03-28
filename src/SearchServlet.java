@@ -57,19 +57,19 @@ public class SearchServlet extends HttpServlet {
                            "ORDER BY M.rating DESC";
 
             if (title != null && !title.trim().isEmpty()) {
-
+                query += "AND M.title ILIKE ? ";
             }
 
             if (year != null && !year.trim().isEmpty()) {
-
+                query += "AND M.year = ? ";
             }
 
             if (director != null && !director.trim().isEmpty()) {
-
+                query += "AND M.director ILIKE ? ";
             }
 
             if (star != null && !star.trim().isEmpty()) {
-
+                query += "AND M.director ILIKE ? ";
             }
 
         } catch (Exception e) {
