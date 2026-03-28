@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "SearchServlet", urlPatterns = "/api/search")
 public class SearchServlet extends HttpServlet {
@@ -71,20 +72,26 @@ public class SearchServlet extends HttpServlet {
                            "LEFT JOIN stars AS S ON SIM.starId = S.id " +
                            "WHERE 1 = 1 ";
 
+            List<Object> params = new ArrayList<>();
+
             if (title != null && !title.isEmpty()) {
                 query += "AND M.title ILIKE ? ";
+                params.add("%" + trimmedTitle + "%");
             }
 
             if (year != null && !year.isEmpty()) {
                 query += "AND M.year = ? ";
+                params.add("%" + trimmedYear + "%");
             }
 
             if (director != null && !director.isEmpty()) {
                 query += "AND M.director ILIKE ? ";
+                params.add("%" + trimmedDirector + "%");
             }
 
             if (star != null && !star.trim().isEmpty()) {
                 query += "AND S.name ILIKE ? ";
+                params.add("%" + trimmedStar + "%");
             }
 
             query += "GROUP BY M.id, M.title, M.year, M.director, M.rating " +
