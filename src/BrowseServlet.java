@@ -66,7 +66,7 @@ public class BrowseServlet extends HttpServlet {
                 parameter = genre;
 
             } else if (!prefix.equals("*")) {
-                query += "WHERE M.title ILIKE ? ";
+                query += "WHERE M.title LIKE ? ";
                 parameter = prefix + "%";
 
             } else {
