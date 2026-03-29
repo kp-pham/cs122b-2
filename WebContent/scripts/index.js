@@ -58,3 +58,5 @@ jQuery.ajax({
     url: "api/genres",
     success: (resultData) => handleResult(resultData)
 });
+
+$("#search-form").submit(submitSearchForm);

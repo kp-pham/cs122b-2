@@ -65,7 +65,7 @@ function buildUrl() {
         params.push(`star=${encodeURIComponent(star)}`);
     }
 
-    return "api/search?" + params.join("&")
+    return "api/search?" + params.join("&");
 }
 
 jQuery.ajax({
