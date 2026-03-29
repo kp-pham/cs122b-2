@@ -105,7 +105,9 @@ public class CartServlet extends HttpServlet {
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+
         HttpSession session = request.getSession();
 
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
@@ -131,5 +133,7 @@ public class CartServlet extends HttpServlet {
                 cart.remove(movieId);
                 break;
         }
+
+        doGet(request, response);
     }
 }
