@@ -44,8 +44,10 @@ function handleResult(resultData) {
 function buildUrl() {
     let genre = getParameterByName("genre");
     let prefix = getParameterByName("prefix");
+    let sort = getParameterByName("sort") || "title-asc-rating-desc";
 
-    return (genre != null) ? `api/browse?genre=${genre}` : `api/browse?prefix=${prefix}`;
+    return (genre != null) ? `api/browse?genre=${encodeURIComponent(genre)}&sort=${encodeURIComponent(sort)}`
+                           : `api/browse?prefix=${encodeURIComponent(prefix)}&sort=${encodeURIComponent(sort)}`;
 }
 
 function submitOptionsForm(formSubmitEvent) {
@@ -55,6 +57,8 @@ function submitOptionsForm(formSubmitEvent) {
     const sort = $("select[name=sort]").val();
     params.set("sort", sort);
 
+    // Rerender page without refresh
+    // Use sessions instead of browser history
     window.location.href = `browse.html?${params.toString()}`;
 }
 
@@ -65,4 +69,4 @@ jQuery.ajax({
     success: (resultData) => handleResult(resultData)
 });
 
-$("#browse.html").submit(submitOptionsForm);
+$("#options-form").submit(submitOptionsForm);
