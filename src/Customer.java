@@ -1,7 +1,9 @@
 public class Customer {
+    private final int id;
     private final String email;
 
-    public Customer(String email) {
+    public Customer(int id, String email) {
+        this.id = id;
         this.email = email;
     }
 }

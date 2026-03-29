@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT password FROM customers WHERE email = ?";
+            String query = "SELECT id, password FROM customers WHERE email = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
@@ -50,7 +50,8 @@ public class LoginServlet extends HttpServlet {
             JsonObject jsonObject = new JsonObject();
 
             if (rs.next() && password.equals(rs.getString("password"))) {
-                request.getSession().setAttribute("customer", new Customer(email));
+                int id = rs.getInt("id");
+                request.getSession().setAttribute("customer", new Customer(id, email));
                 jsonObject.addProperty("status", "success");
                 jsonObject.addProperty("message", "success");
 
