@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @WebServlet(name = "CartServlet", urlPatterns = "/api/cart")
 public class CartServlet extends HttpServlet {
@@ -54,7 +56,7 @@ public class CartServlet extends HttpServlet {
 
             JsonArray jsonArray = new JsonArray();
 
-            double total = 0;
+            BigDecimal total = BigDecimal.ZERO;
 
             for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
                 int movieId = entry.getKey();
@@ -66,22 +68,28 @@ public class CartServlet extends HttpServlet {
                 if (!rs.next()) continue;
 
                 String title = rs.getString("title");
-                double price = rs.getDouble("price");
+                BigDecimal price = rs.getBigDecimal("price");
 
-                double subtotal = price * quantity;
-                total += subtotal;
+                BigDecimal subtotal = price.multiply(new BigDecimal(quantity));
+                subtotal = subtotal.setScale(2, RoundingMode.HALF_UP);
+
+                total = total.add(subtotal);
 
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("id", movieId);
                 jsonObject.addProperty("title", title);
                 jsonObject.addProperty("quantity", quantity);
-                jsonObject.addProperty("price", price);
-                jsonObject.addProperty("subtotal", subtotal);
+                jsonObject.addProperty("price", price.setScale(2, RoundingMode.HALF_UP).doubleValue());
+                jsonObject.addProperty("subtotal", subtotal.doubleValue());
 
                 jsonArray.add(jsonObject);
             }
 
-            out.write(jsonArray.toString());
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.add("items", jsonArray);
+            jsonObject.addProperty("total", total);
+
+            out.write(jsonObject.toString());
             response.setStatus(200);
 
         } catch (Exception e) {
