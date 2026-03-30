@@ -127,8 +127,8 @@ public class TransactionServlet extends HttpServlet {
         }
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "INSERT INTO sales (customerId, movieId, saleDate, quantity) VALUES (?, ?, ?, ?)";
-            PreparedStatement statement = conn.prepareStatement(query);
+            String insertQuery = "INSERT INTO sales (customerId, movieId, saleDate, quantity) VALUES (?, ?, ?, ?)";
+            PreparedStatement insertStatement = conn.prepareStatement(insertQuery);
 
             Customer customer = (Customer) session.getAttribute("customer");
             int customerId = customer.getId();
@@ -139,16 +139,25 @@ public class TransactionServlet extends HttpServlet {
                 String movieId = entry.getKey();
                 int quantity = entry.getValue();
 
-                statement.setInt(1, customerId);
-                statement.setString(2, movieId);
-                statement.setDate(3, date);
-                statement.setInt(4, quantity);
+                insertStatement.setInt(1, customerId);
+                insertStatement.setString(2, movieId);
+                insertStatement.setDate(3, date);
+                insertStatement.setInt(4, quantity);
 
-                statement.addBatch();
+                insertStatement.addBatch();
             }
 
-            statement.executeBatch();
+            insertStatement.executeBatch();
 
+            String selectQuery = "SELECT S.id, M.id, M.title, M.price, S.quantity, (M.price * S.quantity) AS subtotal " +
+                                 "FROM sales AS S " +
+                                 "INNER JOIN movies AS M ON S.movieId = M.id " +
+                                 "WHERE S.customerId = ?";
+
+            PreparedStatement selectStatement = conn.prepareStatement(selectQuery);
+            selectStatement.setInt(1, customerId);
+
+            ResultSet rs = selectStatement.executeQuery();
 
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
