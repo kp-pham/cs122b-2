@@ -143,7 +143,11 @@ public class TransactionServlet extends HttpServlet {
                 statement.setString(2, movieId);
                 statement.setDate(3, date);
                 statement.setInt(4, quantity);
+
+                statement.addBatch();
             }
+
+            statement.executeBatch();
 
 
         } catch (Exception e) {
