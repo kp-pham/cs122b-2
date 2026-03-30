@@ -19,8 +19,8 @@ function handleResult(resultData) {
                         <button class="rounded text-white bg-danger border-danger">Remove</button>
                     </form>
                 </td>
-                <td>${item['price']}</td>
-                <td>${item['subtotal']}</td>
+                <td>$${item['price']}</td>
+                <td>$${item['subtotal']}</td>
             </tr>
         `;
 
@@ -34,7 +34,7 @@ function handleResult(resultData) {
             <tr>
                 <td colspan="3"></td>
                 <td class="text-end text-dark fw-bold">Total:</td>
-                <td>${resultData["total"]}</td>
+                <td>$${resultData["total"]}</td>
             </tr>
         </tfoot>
     `;

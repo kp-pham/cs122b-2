@@ -118,16 +118,14 @@ public class CartServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         String movieId = request.getParameter("id");
-        int quantity = 0;
-
-        if (request.getParameter("quantity") != null) {
-            quantity = Integer.parseInt(request.getParameter("quantity"));
-        }
 
         switch (action) {
             case "add":
-                cart.put(movieId, cart.getOrDefault(movieId, 0) + quantity);
+                cart.put(movieId, cart.getOrDefault(movieId, 0) + 1);
                 break;
+
+            case "subtract":
+                cart.put(movieId, cart.getOrDefault(movieId, 0) - 1);
 
             case "remove":
                 cart.remove(movieId);
