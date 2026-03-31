@@ -90,6 +90,7 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
+    // Separate transaction validation from order confirmation (create new servlet)
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
 
