@@ -119,7 +119,7 @@ public class TransactionServlet extends HttpServlet {
 
         if (!hasFirstName || !hasLastName || !hasCard || !hasExpiration) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("errorMessage", "Please provide the required payment information");
+            jsonObject.addProperty("errorMessage", "Please provide payment information");
             out.write(jsonObject.toString());
 
             response.setStatus(400);
