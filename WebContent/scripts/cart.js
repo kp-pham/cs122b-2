@@ -11,7 +11,7 @@ function handleResult(resultData) {
                 <td class="d-flex gap-2">
                     <form class="subtract-form" method="POST" action="#">
                         <input type="hidden" name="id" value="${item['id']}">
-                        <button type="submit" class="rounded text-white bg-dark">-</button>
+                        <button type="submit" class="rounded text-white bg-dark" ${item["quantity"] <= 1 ? "disabled" : ""}>-</button>
                     </form>
                     <span class="quantity">${item['quantity']}</span>
                     <form class="add-form" method="POST" action="#">
@@ -66,10 +66,6 @@ function submitSubtractForm(submitFormEvent) {
     submitFormEvent.preventDefault();
 
     let quantity = $(this).closest("td").find(".quantity").text();
-
-    if (quantity - 1 <= 0) {
-        return;
-    }
 
     let id = $(this).find("input[name='id']").val();
 
