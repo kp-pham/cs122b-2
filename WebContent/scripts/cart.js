@@ -65,8 +65,6 @@ function submitAddForm(submitFormEvent) {
 function submitSubtractForm(submitFormEvent) {
     submitFormEvent.preventDefault();
 
-    let quantity = $(this).closest("td").find(".quantity").text();
-
     let id = $(this).find("input[name='id']").val();
 
     jQuery.ajax({
