@@ -70,7 +70,7 @@ function showResults() {
         const prefix = getParameterByName("prefix");
         const sort = getParameterByName("sort") || "title-asc-rating-desc";
 
-
+        const params = new URLSearchParams();
     }
 }
 
