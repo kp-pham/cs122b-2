@@ -66,6 +66,10 @@ function showResults() {
     if (isValid(state)) {
 
     } else {
+        const genre = getParameterByName("genre");
+        const prefix = getParameterByName("prefix");
+        const sort = getParameterByName("sort") || "title-asc-rating-desc";
+
 
     }
 }
