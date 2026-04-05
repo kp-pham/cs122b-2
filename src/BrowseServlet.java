@@ -26,6 +26,16 @@ public class BrowseServlet extends HttpServlet {
 
     private DataSource dataSource;
 
+    private static final String SORT_TITLE_ASC_RATING_DESC = "title-asc-rating-desc";
+    private static final String SORT_TITLE_DESC_RATING_ASC = "title-desc-rating-asc";
+    private static final String SORT_TITLE_ASC_RATING_ASC = "title-asc-rating-asc";
+    private static final String SORT_TITLE_DESC_RATING_DESC = "title-desc-rating-desc";
+
+    private static final String SORT_RATING_ASC_TITLE_DESC = "rating-asc-title-desc";
+    private static final String SORT_RATING_DESC_TITLE_ASC = "rating-desc-title-asc";
+    private static final String SORT_RATING_ASC_TITLE_ASC = "rating-asc-title-asc";
+    private static final String SORT_RATING_DESC_TITLE_DESC = "rating-desc-title-desc";
+
     public void init(ServletConfig config) {
         try {
             dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
@@ -39,6 +49,7 @@ public class BrowseServlet extends HttpServlet {
 
         String genre = request.getParameter("genre");
         String prefix = request.getParameter("prefix");
+        String sort = request.getParameter("sort");
 
         PrintWriter out = response.getWriter();
 
@@ -78,7 +89,12 @@ public class BrowseServlet extends HttpServlet {
                 query += "WHERE M.title REGEXP '^[^a-z0-9]' ";
             }
 
-            query += "GROUP BY M.id, M.title, M.year, M.director, R.rating";
+            query += "GROUP BY M.id, M.title, M.year, M.director, R.rating ";
+
+            switch(sort) {
+                default:
+                    query += "ORDER BY M.title ASC, R.rating DESC";
+            }
 
             PreparedStatement statement = conn.prepareStatement(query);
 
