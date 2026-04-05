@@ -1,9 +1,28 @@
+function handleClick(clickEvent) {
+    clickEvent.preventDefault();
+
+    const type = $(clickEvent.currentTarget).data("type");
+    const value = $(clickEvent.currentTarget).data("value");
+
+    sessionStorage.setItem("movieListState", JSON.stringify({
+        type: "browse",
+        [type]: value,
+        page: 1,
+        sortBy: "title",
+        sortOrder: "asc",
+        itemsPerPage: 25
+    }));
+
+    window.location.href = `list.html?${encodeURIComponent(type)}=${encodeURIComponent(value)}`;
+}
+
 function handleResult(resultData) {
     let genresList = $("#genres-list");
 
-    resultData.forEach((genre, index) => {
-        let link = `<a href="list.html?genre=${encodeURIComponent(genre)}" 
-                              data-type="genre" data-value="${genre}" class="text-center">${genre}</a>`;
+    resultData.forEach((genre) => {
+        let link = $(`<a href="list.html?genre=${encodeURIComponent(genre)}" 
+                              data-type="genre" data-value="${genre}" class="text-center">${genre}</a>`);
+        link.on("click", handleClick);
         genresList.append(link);
     });
 }
@@ -13,7 +32,9 @@ function showPrefixes() {
     let prefixes = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*";
 
     for (const prefix of prefixes) {
-        let link = `<a href="list.html?prefix=${encodeURIComponent(prefix)}">${prefix}</a>`;
+        let link = $(`<a href="list.html?prefix=${encodeURIComponent(prefix)}" 
+                              data-type="prefix" data-value="${prefix}">${prefix}</a>`);
+        link.on("click", handleClick);
         prefixList.append(link);
     }
 }
