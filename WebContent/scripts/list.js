@@ -21,7 +21,7 @@ function handleResult(resultData) {
     const page = getParameterByName("page") || 1;
     const offset = getParameterByName("offset") || 1;
 
-    const sortDropdown = $("#sort");
+    const sortDropdown = jQuery("#sort");
     sortDropdown.val(sort);
 
     let movieTable = jQuery("#movie-table-body");
@@ -37,8 +37,8 @@ function handleResult(resultData) {
                 <td>${movie['genres'].slice(0, 3).join(', ')}</td>
                 <td>
                     ${movie['stars'].slice(0, 3).map(({id, name}) => {
-            return `<a href="single-star.html?id=${id}">${name}</a>`
-        }).join(', ')}
+                        return `<a href="single-star.html?id=${id}">${name}</a>`
+                    }).join(', ')}
                 </td>
                 <td>${(movie['rating'] ?? "N/A")}</td>
                 <td>
@@ -52,6 +52,13 @@ function handleResult(resultData) {
 
         movieTable.append(row);
     });
+
+    let pageForm = jQuery("#page-form");
+    pageForm.append(`
+        <button type="submit" class="rounded text-white bg-dark">\<</button>
+        <input type="number" id="page" value=${page}>
+        <button type="submit" class="rounded text-white bg-dark">\></button>
+    `);
 }
 
 function hasSearchParams() {
