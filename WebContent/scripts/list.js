@@ -56,7 +56,7 @@ function handleResult(resultData) {
     let pageForm = jQuery("#page-form");
     pageForm.append(`
         <button type="submit" class="rounded text-white bg-dark">\<</button>
-        <input type="text" id="page" value=${page}>
+        <input type="text" pattern="[0-9]+" id="page" value="${page}">
         <button type="submit" class="rounded text-white bg-dark">\></button>
     `);
 }
