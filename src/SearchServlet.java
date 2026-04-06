@@ -55,7 +55,7 @@ public class SearchServlet extends HttpServlet {
 
         if (!hasTitle && !hasYear && !hasDirector && !hasStar) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("errorMessage", "Please provide at least one search parameter");
+            jsonObject.addProperty("message", "Please provide at least one search parameter");
             out.write(jsonObject.toString());
 
             response.setStatus(400);
@@ -145,7 +145,7 @@ public class SearchServlet extends HttpServlet {
 
         } catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("errorMessage", e.getMessage());
+            jsonObject.addProperty("message", e.getMessage());
             out.write(jsonObject.toString());
 
             request.getServletContext().log("Error:", e);

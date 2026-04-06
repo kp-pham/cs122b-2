@@ -53,6 +53,17 @@ public class BrowseServlet extends HttpServlet {
         String page = request.getParameter("page");
         String size = request.getParameter("size");
 
+        PrintWriter out = response.getWriter();
+
+        if ((genre == null || genre.isEmpty()) && (prefix == null || prefix.isEmpty())) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("message", "Please provide a search parameter");
+            out.write(jsonObject.toString());
+
+            response.setStatus(400);
+            return;
+        }
+
         int pageNumber = DEFAULT_PAGE_NUMBER;
         int pageSize = DEFAULT_PAGE_SIZE;
 
@@ -78,8 +89,6 @@ public class BrowseServlet extends HttpServlet {
 
         int offset = (pageNumber - 1) * pageSize;
 
-        PrintWriter out = response.getWriter();
-
         try (Connection conn = dataSource.getConnection()) {
             String query = "SELECT M.id, M.title, M.year, M.director, R.rating, " +
                            "CONCAT('[', GROUP_CONCAT(DISTINCT G.name ORDER BY G.name ASC SEPARATOR ', '), ']') AS genres, " +
@@ -98,7 +107,7 @@ public class BrowseServlet extends HttpServlet {
 
             String parameter = null;
 
-            if (genre != null) {
+            if (genre != null && !genre.isEmpty()) {
                 query += "WHERE EXISTS ( " +
                          "    SELECT 1 " +
                          "    FROM genres_in_movies AS GIM " +
