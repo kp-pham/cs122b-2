@@ -53,11 +53,20 @@ function handleResult(resultData) {
         movieTable.append(row);
     });
 
-    let pageForm = jQuery("#page-form");
-    pageForm.append(`
-        <button type="submit" class="rounded text-white bg-dark">\<</button>
-        <input type="text" pattern="[0-9]+" id="page" value="${page}">
-        <button type="submit" class="rounded text-white bg-dark">\></button>
+    let pageLookup = jQuery("#page-lookup");
+    pageLookup.append(`
+        <form id="previous-form" method="GET" action="#">
+            <input type="hidden" name="page" value="${page - 1}">
+            <button type="submit" class="rounded text-white bg-dark" 
+                    ${(page - 1 < 1) ? "disabled" : ""}>\<</button>
+        </form>
+        <form id="page-form">
+            <input type="text" pattern="[0-9]+" id="page" value="${page}">
+        </form>
+        <form id="next-form" method="GET" action="#">
+            <input type="hidden" name="page" value="${page + 1}">
+            <button type="submit" class="rounded text-white bg-dark">\></button>
+        </form>
     `);
 }
 
