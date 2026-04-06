@@ -21,10 +21,28 @@ function getParameterByName(target) {
 function handleResult(resultData) {
     const sort = getParameterByName("sort") || "title-asc-rating-desc";
     const page = Number(getParameterByName("page")) || 1;
-    const offset = getParameterByName("offset") || 1;
+    const pageSize = getParameterByName("pageSize") || 25;
 
     const sortDropdown = jQuery("#sort");
     sortDropdown.val(sort);
+
+    let pageSizeDropdown = jQuery("#page-size");
+    pageSizeDropdown.val(pageSize);
+
+    let pageLookup = jQuery("#page-lookup");
+    pageLookup.append(`
+        <form id="previous-page" method="GET" action="#" class="page-form">
+            <input type="hidden" id="page" value="${page - 1}">
+            <button type="submit" class="rounded text-white bg-dark" 
+                    ${(page - 1 < 1) ? "disabled" : ""}>\<</button>
+        </form>
+        <input type="text" pattern="[0-9]+" id="page" value="${page}" disabled>
+        <form id="next-page" method="GET" action="#" class="page-form">
+            <input type="hidden" id="page" value="${page + 1}">
+            <button type="submit" class="rounded text-white bg-dark"
+                    ${resultData["lastPage"] ? "disabled" : ""}>\></button>
+        </form>
+    `);
 
     let movieTable = jQuery("#movie-table-body");
 
@@ -54,21 +72,6 @@ function handleResult(resultData) {
 
         movieTable.append(row);
     });
-
-    let pageLookup = jQuery("#page-lookup");
-    pageLookup.append(`
-        <form id="previous-page" method="GET" action="#" class="page-form">
-            <input type="hidden" id="page" value="${page - 1}">
-            <button type="submit" class="rounded text-white bg-dark" 
-                    ${(page - 1 < 1) ? "disabled" : ""}>\<</button>
-        </form>
-        <input type="text" pattern="[0-9]+" id="page" value="${page}" disabled>
-        <form id="next-page" method="GET" action="#" class="page-form">
-            <input type="hidden" id="page" value="${page + 1}">
-            <button type="submit" class="rounded text-white bg-dark"
-                    ${resultData["lastPage"] ? "disabled" : ""}>\></button>
-        </form>
-    `);
 }
 
 function hasSearchParams() {
