@@ -56,7 +56,7 @@ function handleResult(resultData) {
     let pageForm = jQuery("#page-form");
     pageForm.append(`
         <button type="submit" class="rounded text-white bg-dark">\<</button>
-        <input type="number" id="page" value=${page}>
+        <input type="text" id="page" value=${page}>
         <button type="submit" class="rounded text-white bg-dark">\></button>
     `);
 }
@@ -122,6 +122,7 @@ function showResults() {
     } else {
         return;
     }
+
     const params = new URLSearchParams();
     Object.entries(state).forEach(([key, value]) => {
         if (key !== "type" && value != null) {

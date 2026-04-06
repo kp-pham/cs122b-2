@@ -27,3 +27,8 @@
 #payment {
     max-width: 500px;
 }
+
+#page {
+    text-align: center;
+    max-width: 30px;
+}
