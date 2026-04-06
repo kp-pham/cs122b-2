@@ -36,7 +36,3 @@
 #alert-container {
     z-index: 1050;
 }
-
-#alert-dismissable {
-    margin: 0;
-}
