@@ -101,6 +101,8 @@ public class SearchServlet extends HttpServlet {
                 pageSize = DEFAULT_PAGE_SIZE;
         }
 
+        int offset = (pageNumber - 1) * pageSize;
+
         try (Connection conn = dataSource.getConnection()) {
             String query = "SELECT M.id, M.title, M.year, M.director, R.rating, " +
                            "CONCAT('[', GROUP_CONCAT(DISTINCT G.name ORDER BY G.name ASC SEPARATOR ', '), ']') AS genres, " +
@@ -184,8 +186,8 @@ public class SearchServlet extends HttpServlet {
 
             query += "LIMIT ? OFFSET ?";
 
-            params.add(pageNumber + 1);
-            params.add(pageSize);
+            params.add(pageSize + 1);
+            params.add(offset);
 
             PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.size(); ++i) {
@@ -235,7 +237,7 @@ public class SearchServlet extends HttpServlet {
             rs.close();
             statement.close();
 
-            out.write(jsonArray.toString());
+            out.write(jsonObject.toString());
             response.setStatus(200);
 
         } catch (Exception e) {
