@@ -38,6 +38,8 @@ public class SearchServlet extends HttpServlet {
     private static final int DEFAULT_PAGE_NUMBER = 1;
     private static final int DEFAULT_PAGE_SIZE = 25;
 
+    Set<Integer> ALLOWED_PAGE_SIZES = Set.of(10, 25, 50, 100);
+
     public void init(ServletConfig config) {
         try {
             dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
@@ -61,11 +63,15 @@ public class SearchServlet extends HttpServlet {
         String trimmedYear = (year == null) ? null : year.trim();
         String trimmedDirector = (director == null) ? null : director.trim();
         String trimmedStar = (star == null) ? null : star.trim();
+        String trimmedPage = (page == null) ? null : page.trim();
+        String trimmedSize = (size == null) ? null : size.trim();
 
         boolean hasTitle = (trimmedTitle != null && !trimmedTitle.isEmpty());
         boolean hasYear = (trimmedYear != null && !trimmedYear.isEmpty());
         boolean hasDirector = (trimmedDirector != null && !trimmedDirector.isEmpty());
         boolean hasStar = (trimmedStar != null && !trimmedStar.isEmpty());
+        boolean hasPage = (trimmedPage != null && !trimmedPage.isEmpty());
+        boolean hasSize = (trimmedSize != null && !trimmedSize.isEmpty());
 
         PrintWriter out = response.getWriter();
 
@@ -82,23 +88,29 @@ public class SearchServlet extends HttpServlet {
         int pageSize = DEFAULT_PAGE_SIZE;
 
         try {
-            if (page != null && !page.isEmpty())
+            if (hasPage) {
                 pageNumber = Integer.parseInt(page);
 
-            if (size != null && !size.isEmpty())
+                if (pageNumber < 1) {
+                    throw new Exception("Please provide a valid page number");
+                }
+            }
+
+            if (hasSize) {
                 pageSize = Integer.parseInt(size);
 
-        } catch (NumberFormatException e) {
-            pageNumber = DEFAULT_PAGE_NUMBER;
-            pageSize = DEFAULT_PAGE_SIZE;
+                if (!ALLOWED_PAGE_SIZES.contains(pageSize)) {
+                    throw new Exception("Please provide a valid page size");
+                }
+            }
 
-        } finally {
-            if (pageNumber < 1)
-                pageNumber = DEFAULT_PAGE_NUMBER;
+        } catch (Exception E) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("message", "Please provide valid page number and size");
+            out.write(jsonObject.toString());
 
-            Set<Integer> allowedSizes = Set.of(10, 25, 50, 100);
-            if (!allowedSizes.contains(pageSize))
-                pageSize = DEFAULT_PAGE_SIZE;
+            response.setStatus(400);
+            return;
         }
 
         int offset = (pageNumber - 1) * pageSize;

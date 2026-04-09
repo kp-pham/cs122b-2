@@ -57,7 +57,7 @@ public class BrowseServlet extends HttpServlet {
 
         String trimmedGenre = (genre == null) ? null : genre.trim();
         String trimmedPrefix = (prefix == null) ? null : prefix.trim();
-        String trimmedPage = (prefix == null) ? null : page.trim();
+        String trimmedPage = (page == null) ? null : page.trim();
         String trimmedSize = (size == null) ? null : size.trim();
 
         boolean hasGenre = (trimmedGenre != null && !trimmedGenre.isEmpty());
