@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @WebServlet(name = "BrowseServlet", urlPatterns = "/api/browse")
@@ -123,7 +125,7 @@ public class BrowseServlet extends HttpServlet {
                            ") AS S ON SIM.starId = S.id " +
                            "LEFT JOIN ratings AS R ON R.movieId = M.id ";
 
-            String parameter = null;
+            List<Object> params = new ArrayList<>();
 
             if (hasGenre) {
                 query += "WHERE EXISTS ( " +
@@ -133,11 +135,11 @@ public class BrowseServlet extends HttpServlet {
                          "    WHERE GIM.movieId = M.id" +
                          "    AND G.name = ? " +
                          ") ";
-                parameter = trimmedGenre;
+                params.add(trimmedGenre);
 
             } else if (!trimmedPrefix.equals("*")) {
                 query += "WHERE M.title LIKE ? ";
-                parameter = trimmedPrefix + "%";
+                params.add(trimmedPrefix + "%");
 
             } else {
                 query += "WHERE M.title REGEXP '^[^a-z0-9]' ";
@@ -181,15 +183,14 @@ public class BrowseServlet extends HttpServlet {
 
             query += "LIMIT ? OFFSET ?";
 
+            params.add(pageSize + 1);
+            params.add(offset);
+
             PreparedStatement statement = conn.prepareStatement(query);
 
-            if (parameter != null) {
-                statement.setString(1, parameter);
+            for (int i = 0; i < params.size(); ++i) {
+                statement.setObject(i + 1, params.get(i));
             }
-
-            // Retrieve additional row to determine whether there is another page
-            statement.setInt(2, pageSize + 1);
-            statement.setInt(3, offset);
 
             ResultSet rs = statement.executeQuery();
 
