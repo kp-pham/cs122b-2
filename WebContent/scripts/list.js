@@ -201,6 +201,9 @@ function submitOptionsForm(formSubmitEvent) {
     const sort = $("select[name=sort]").val();
     params.set("sort", sort);
 
+    const pageSize = $("select[name=pageSize]").val();
+    params.set("pageSize", pageSize);
+
     window.location.href = `list.html?${params.toString()}`;
 }
 
